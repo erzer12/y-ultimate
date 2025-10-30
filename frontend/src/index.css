@@ -1,0 +1,29 @@
+/**
+ * Main CSS File - Tailwind Imports
+ * 
+ * This file imports the Tailwind CSS directives that generate all utility classes.
+ */
+
+/* Tailwind Base Styles */
+/* Injects browser resets and base styles (like normalize.css) */
+/* This ensures consistent styling across different browsers */
+@tailwind base;
+
+/* Tailwind Component Classes */
+/* Injects Tailwind's component classes (if any are defined) */
+/* You can also add your own component classes here */
+@tailwind components;
+
+/* Tailwind Utility Classes */
+/* Injects all of Tailwind's utility classes (like "bg-blue-500", "flex", "p-4", etc.) */
+/* This is the core of Tailwind - thousands of single-purpose utility classes */
+@tailwind utilities;
+
+/* 
+ * You can add custom global styles below the Tailwind imports
+ * For example:
+ * 
+ * body {
+ *   font-family: 'Inter', sans-serif;
+ * }
+ */
