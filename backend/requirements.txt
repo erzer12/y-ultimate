@@ -1,0 +1,14 @@
+# --- Core Web Framework ---
+fastapi[all]    # The web framework. [all] includes uvicorn, pydantic, etc.
+
+# --- Database (SQLAlchemy ORM) ---
+SQLAlchemy      # The core Object Relational Mapper (ORM)
+alembic         # For database migrations (changing schema over time)
+psycopg2-binary # The Python driver for PostgreSQL
+
+# --- Settings & Environment ---
+pydantic-settings # For managing settings and reading from .env files
+
+# --- Security & Authentication ---
+python-jose[cryptography] # For creating and verifying JWT tokens
+passlib[bcrypt]           # For hashing and verifying passwords
