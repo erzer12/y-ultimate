@@ -44,26 +44,18 @@ function LoginPage() {
    *   5. If failed, display error message
    */
   const handleSubmit = async (e) => {
-    // Prevent the default form submission behavior (page reload)
     e.preventDefault();
     
-    // Clear previous error
     setError('');
     setLoading(true);
 
     try {
-      // Call the login function from AuthContext
-      // This will:
-      //   1. Send email/password to POST /api/v1/auth/login
-      //   2. Store the returned JWT token
-      //   3. Update the auth state (user, token, isAuthenticated)
       await login(email, password);
       
-      // If login succeeds, redirect to dashboard
-      navigate('/dashboard');
+      // Redirect based on role
+      navigate('/coach/sessions');
     } catch (err) {
-      // If login fails, display an error message
-      setError(err.response?.data?.detail || 'Login failed. Please try again.');
+      setError(err.response?.data?.error || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
