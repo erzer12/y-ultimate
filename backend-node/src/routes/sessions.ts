@@ -55,7 +55,7 @@ router.post('/', authenticateToken, requireRole('admin', 'manager'), async (req:
     const session = await prisma.session.create({
       data: {
         date: new Date(date),
-        siteId: parseInt(siteId),
+        siteId: parseInt(siteId, 10),
         notes: notes || null
       },
       include: {
@@ -73,7 +73,7 @@ router.post('/', authenticateToken, requireRole('admin', 'manager'), async (req:
 // Bulk save attendance for a session
 router.post('/:id/attendance', authenticateToken, requireRole('admin', 'manager', 'coach'), async (req: AuthRequest, res: Response) => {
   try {
-    const sessionId = parseInt(req.params.id);
+    const sessionId = parseInt(req.params.id, 10);
     const { attendance } = req.body;
 
     if (!Array.isArray(attendance)) {
@@ -100,7 +100,7 @@ router.post('/:id/attendance', authenticateToken, requireRole('admin', 'manager'
         prisma.attendance.create({
           data: {
             sessionId,
-            childId: parseInt(record.childId),
+            childId: parseInt(record.childId, 10),
             present: Boolean(record.present),
             notes: record.notes || null
           },

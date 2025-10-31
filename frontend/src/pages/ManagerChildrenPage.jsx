@@ -48,7 +48,7 @@ function ManagerChildrenPage() {
       
       await childrenService.createChild({
         ...formData,
-        siteId: parseInt(formData.siteId),
+        siteId: parseInt(formData.siteId, 10),
         dateOfBirth: formData.dateOfBirth || null,
       });
       

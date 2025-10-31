@@ -23,7 +23,7 @@ router.get('/attendance', authenticateToken, requireRole('admin', 'manager'), as
     };
 
     if (site) {
-      whereClause.session.siteId = parseInt(site as string);
+      whereClause.session.siteId = parseInt(site as string, 10);
     }
 
     const attendanceRecords = await prisma.attendance.findMany({

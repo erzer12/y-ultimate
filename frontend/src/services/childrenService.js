@@ -19,7 +19,7 @@ export const importChildren = async (file) => {
   const formData = new FormData();
   formData.append('file', file);
   
-  const response = await apiClient.post('/import/children', formData, {
+  const response = await apiClient.post('/children/import', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

@@ -40,7 +40,7 @@ router.post('/', authenticateToken, requireRole('admin', 'manager'), async (req:
         firstName,
         lastName,
         dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
-        siteId: parseInt(siteId)
+        siteId: parseInt(siteId, 10)
       },
       include: {
         site: true
@@ -84,7 +84,7 @@ router.post('/import', authenticateToken, requireRole('admin'), upload.single('f
                   firstName: row.firstName,
                   lastName: row.lastName,
                   dateOfBirth: row.dateOfBirth ? new Date(row.dateOfBirth) : null,
-                  siteId: parseInt(row.siteId)
+                  siteId: parseInt(row.siteId, 10)
                 }
               });
               imported.push(child);

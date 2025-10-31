@@ -29,7 +29,7 @@ function SessionAttendancePage() {
         childrenService.getChildren(),
       ]);
 
-      const currentSession = sessionsData.find((s) => s.id === parseInt(id));
+      const currentSession = sessionsData.find((s) => s.id === parseInt(id, 10));
       setSession(currentSession);
 
       // Filter children by session site
@@ -85,12 +85,12 @@ function SessionAttendancePage() {
 
       // Convert attendance object to array format
       const attendanceArray = Object.entries(attendance).map(([childId, data]) => ({
-        childId: parseInt(childId),
+        childId: parseInt(childId, 10),
         present: data.present,
         notes: data.notes || null,
       }));
 
-      await sessionsService.saveAttendance(parseInt(id), attendanceArray);
+      await sessionsService.saveAttendance(parseInt(id, 10), attendanceArray);
       setSuccess('Attendance saved successfully!');
       
       setTimeout(() => {
