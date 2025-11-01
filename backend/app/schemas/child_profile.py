@@ -1,15 +1,17 @@
-# Placeholder for ChildProfile schemas
 from pydantic import BaseModel
+from datetime import date
 
 class ChildProfileBase(BaseModel):
-    first_name: str
-    last_name: str | None = None
+    name: str
+    date_of_birth: date
+    school: str | None = None
+    community: str | None = None
 
 class ChildProfileCreate(ChildProfileBase):
     pass
 
 class ChildProfile(ChildProfileBase):
     id: int
-    
+
     class Config:
         from_attributes = True

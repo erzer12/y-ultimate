@@ -27,14 +27,22 @@ services:
     # This ensures the database always restarts if it stops
     restart: always
   backend: 
-    # Node.js backend service
+    # Python backend service
     build: ./backend
     container_name: y-ultimate-backend
     ports:
       - "8000:8000"
     depends_on:
       - db
+  frontend:
+    # Frontend service
+    build: ./frontend
+    container_name: y-ultimate-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
 # This named volume is where Docker stores the data from 'volumes'
 volumes:
   postgres_data:
-
