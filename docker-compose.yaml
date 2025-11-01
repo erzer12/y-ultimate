@@ -1,0 +1,40 @@
+
+# This file defines our 'services'. For now, just one: the database.
+services:
+  db:
+    # We use the official PostgreSQL 15 image
+    image: postgres:15
+    container_name: y-ultimate-db
+    
+    # These are your environment variables.
+    # This is where you set the username, password, and DB name.
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: yultimate_db
+    
+    # This 'volumes' line is very important.
+    # It saves your database data to a folder on your computer.
+    # If you stop or restart the container, your data is safe.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+    # This maps the port inside the container (5432)
+    # to a port on your local machine (5432).
+    ports:
+      - "5432:5432"
+    
+    # This ensures the database always restarts if it stops
+    restart: always
+  backend: 
+    # Node.js backend service
+    build: ./backend
+    container_name: y-ultimate-backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+# This named volume is where Docker stores the data from 'volumes'
+volumes:
+  postgres_data:
+

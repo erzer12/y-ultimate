@@ -1,103 +1,45 @@
-"""
-FastAPI Main Application Entry Point
-
-This is the main file that creates and configures the FastAPI application.
-When you run `uvicorn app.main:app`, Python looks for the 'app' object in this file.
-
-Key components:
-  1. FastAPI() instance: The core application object
-  2. CORSMiddleware: CRITICAL for allowing the frontend to make requests to this backend
-  3. Router inclusion: Connects all API endpoints from app/api/v1/api.py
-"""
-
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
+from .db.session import get_db, engine # Import from our new 'db' folder
+from .api.v1.api import api_router # Import our new V1 router
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1.api import api_router
-from app.core.config import settings
+# Create the main FastAPI application instance
+app = FastAPI()
 
-# Create the FastAPI application instance
-# This is the main object that handles all HTTP requests
-app = FastAPI(
-    title="Y-Ultimate Management Platform API",
-    description="Backend API for managing tournaments, teams, and player profiles",
-    version="1.0.0",
-    # Customize the auto-generated API documentation
-    docs_url="/docs",  # Swagger UI at http://localhost:8000/docs
-    redoc_url="/redoc",  # ReDoc at http://localhost:8000/redoc
-)
-
-# === CORS Configuration ===
-# CORS (Cross-Origin Resource Sharing) is CRITICAL for web applications.
-# 
-# The Problem:
-#   By default, browsers block JavaScript requests from one origin (domain/port)
-#   to another origin. Your React frontend runs on http://localhost:5173, and
-#   your FastAPI backend runs on http://localhost:8000. These are different
-#   origins, so the browser will block requests from the frontend to the backend.
-#
-# The Solution:
-#   Add CORSMiddleware to tell the browser which origins are allowed to make requests.
-#   The backend sends special CORS headers in its responses, which tell the browser
-#   "it's okay, I trust requests from http://localhost:5173".
-#
-# Configuration:
-#   - allow_origins: List of allowed origins (the React frontend URL)
-#   - allow_credentials: Allow cookies/authentication headers
-#   - allow_methods: Which HTTP methods are allowed (GET, POST, etc.)
-#   - allow_headers: Which headers are allowed (Authorization, Content-Type, etc.)
-#
-# IMPORTANT: In production, replace ["http://localhost:5173"] with your actual
-# frontend domain (e.g., ["https://yourdomain.com"])
+# --- CORS Middleware ---
+# This is CRITICAL for your frontend to talk to your backend
+# It allows requests from your React app (running on localhost:5173)
 app.add_middleware(
     CORSMiddleware,
+    # This list should contain the URL of your React app
     allow_origins=[
-        "http://localhost:5173",  # React dev server
-        "http://localhost:3000",  # Alternative React port
-        # Add your production frontend URL here when deploying
+        "http://localhost:5173", 
+        "http://127.0.0.1:5173",
     ],
-    allow_credentials=True,  # Allow cookies and Authorization headers
-    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_credentials=True,
+    allow_methods=["*"], # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"], # Allow all headers
 )
 
-# === Include API Router ===
-# This connects all the endpoints from app/api/v1/api.py to the main app.
-# The api_router includes all endpoint files (auth.py, tournaments.py, etc.)
-# The prefix="/api" means all routes will start with /api
-#
-# Example routes:
-#   - POST /api/v1/auth/login
-#   - GET /api/v1/tournaments/
-#   - POST /api/v1/teams/
+# --- Include API Routers ---
+# This line adds all the routes from 'api/v1/api.py'
+# All routes from api_router will be prefixed with '/api/v1'
 app.include_router(api_router, prefix="/api/v1")
 
 
-# === Root Endpoint ===
-# A simple endpoint to verify the API is running
 @app.get("/")
-def root():
+def read_root(db: Session = Depends(get_db)):
     """
-    Root endpoint
-    
-    Returns a welcome message.
-    Visit http://localhost:8000 to see this response.
+    This is the main root endpoint.
+    It's a good place to check if the server is running
+    and if the database connection is healthy.
     """
-    return {
-        "message": "Welcome to Y-Ultimate Management Platform API",
-        "docs": "/docs",
-        "redoc": "/redoc"
-    }
+    try:
+        # Try to execute a simple query
+        db.execute("SELECT 1")
+        return {"message": "Y-Ultimate API is running!", "database_status": "Connected"}
+    except Exception as e:
+        # If the DB connection fails, return an error
+        return {"message": "Y-Ultimate API is running!", "database_status": "Connection FAILED", "error": str(e)}
 
-
-# === Health Check Endpoint ===
-# Useful for monitoring and deployment systems
-@app.get("/health")
-def health_check():
-    """
-    Health check endpoint
-    
-    Returns the API status.
-    Useful for monitoring tools and container orchestration systems.
-    """
-    return {"status": "healthy"}

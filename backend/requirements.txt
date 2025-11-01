@@ -1,14 +1,45 @@
-# --- Core Web Framework ---
-fastapi[all]    # The web framework. [all] includes uvicorn, pydantic, etc.
+# Core framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
 
-# --- Database (SQLAlchemy ORM) ---
-SQLAlchemy      # The core Object Relational Mapper (ORM)
-alembic         # For database migrations (changing schema over time)
-psycopg2-binary # The Python driver for PostgreSQL
+# Database
+sqlalchemy==2.0.23
+alembic==1.12.1
+psycopg2-binary==2.9.9          # PostgreSQL driver (swap if using MySQL/SQLite)
 
-# --- Settings & Environment ---
-pydantic-settings # For managing settings and reading from .env files
+# Async support
+asyncpg==0.29.0                 # Fast PostgreSQL async driver
 
-# --- Security & Authentication ---
-python-jose[cryptography] # For creating and verifying JWT tokens
-passlib[bcrypt]           # For hashing and verifying passwords
+# Validation & serialization
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Environment & secrets
+python-dotenv==1.0.0
+python-multipart==0.0.6         # For form-data / OAuth2 password flow
+
+# Authentication & security
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+
+# Utilities
+email-validator==2.1.0
+httpx==0.25.2                   # Async HTTP client for external calls
+tenacity==8.2.3                 # Retry helpers
+
+# Development / testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+factory-boy==3.3.0              # Optional: fake data factories
+
+# Optional extras (uncomment if needed)
+# redis==5.0.1                  # Redis client
+# celery==5.3.4                 # Task queue
+# aioredis==2.0.1               # Async Redis (deprecated, use redis>=4.2.0)
+# boto3==1.34.0                 # AWS SDK
+# minio==7.2.0                  # S3-compatible object storage client
+# stripe==7.8.0                 # Stripe payments
+# sendgrid==6.11.0              # Email service
+# jinja2==3.1.2                 # Template engine (if SSR)
+# slowapi==0.1.9                # Rate-limiting for FastAPI
