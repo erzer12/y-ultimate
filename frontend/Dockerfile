@@ -16,5 +16,5 @@ COPY . .
 # Expose the port the app runs on
 EXPOSE 5173
 
-# Define the command to run your app
-CMD ["npm", "run", "dev"]
+# Define the command to run your app with host binding for Docker
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
