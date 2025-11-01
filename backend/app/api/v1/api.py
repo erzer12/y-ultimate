@@ -1,12 +1,33 @@
 from fastapi import APIRouter
-from .endpoints import auth, profiles
+from .endpoints import (
+    auth,
+    profiles,
+    tournaments,
+    teams,
+    coaches,
+    sessions,
+    attendance,
+    home_visits,
+    assessments,
+    matches,
+    registrations,
+)
 
 api_router = APIRouter()
 
-# Include the 'auth' router
-# All routes from 'auth.py' will now be prefixed with '/auth'
-api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
-api_router.include_router(profiles.router, prefix="/profiles", tags=["profiles"])
+# Authentication
+api_router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 
-# We can add more routers here later, e.g.:
-# api_router.include_router(tournaments.router, prefix="/tournaments", tags=["tournaments"])
+# Coaching Programme Management
+api_router.include_router(profiles.router, prefix="/profiles", tags=["Child Profiles"])
+api_router.include_router(coaches.router, prefix="/coaches", tags=["Coaches"])
+api_router.include_router(sessions.router, prefix="/sessions", tags=["Sessions"])
+api_router.include_router(attendance.router, prefix="/attendance", tags=["Attendance"])
+api_router.include_router(home_visits.router, prefix="/home-visits", tags=["Home Visits"])
+api_router.include_router(assessments.router, prefix="/assessments", tags=["Assessments"])
+
+# Tournament Management
+api_router.include_router(tournaments.router, prefix="/tournaments", tags=["Tournaments"])
+api_router.include_router(teams.router, prefix="/teams", tags=["Teams"])
+api_router.include_router(matches.router, prefix="/matches", tags=["Matches"])
+api_router.include_router(registrations.router, prefix="/registrations", tags=["Player Registrations"])
