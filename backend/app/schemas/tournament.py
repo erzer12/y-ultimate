@@ -1,28 +1,74 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from datetime import date
-from .user import User # Import the User schema to nest it
+from typing import Optional
 
-# --- TournamentBase ---
-# The common fields shared by create and read schemas
+
 class TournamentBase(BaseModel):
+    """Base tournament schema"""
     name: str
-    location: str | None = None
-    start_date: date | None = None
-    end_date: date | None = None
+    description: Optional[str] = None
+    location: str
+    venue: Optional[str] = None
+    start_date: date
+    end_date: date
+    registration_open_date: Optional[date] = None
+    registration_close_date: Optional[date] = None
+    max_teams: Optional[int] = None
+    tournament_format: Optional[str] = None  # round_robin, bracket, pool_play
+    age_division: Optional[str] = None  # U12, U15, U18, Open
+    organizer_name: Optional[str] = None
+    organizer_email: Optional[EmailStr] = None
+    organizer_phone: Optional[str] = None
+    rules: Optional[str] = None
+    notes: Optional[str] = None
 
-# --- TournamentCreate ---
-# The schema used when *creating* a new tournament
-# We don't need owner_id here, as we get it from the logged-in user
+
 class TournamentCreate(TournamentBase):
-    pass
+    """Schema for creating a tournament"""
+    owner_id: int
 
-# --- Tournament ---
-# The schema used when *reading* a tournament from the API
-# This will be returned to the frontend
+
+class TournamentUpdate(BaseModel):
+    """Schema for updating a tournament"""
+    name: Optional[str] = None
+    description: Optional[str] = None
+    location: Optional[str] = None
+    venue: Optional[str] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    registration_open_date: Optional[date] = None
+    registration_close_date: Optional[date] = None
+    max_teams: Optional[int] = None
+    tournament_format: Optional[str] = None
+    age_division: Optional[str] = None
+    status: Optional[str] = None
+    is_published: Optional[bool] = None
+    logo_url: Optional[str] = None
+    banner_url: Optional[str] = None
+    organizer_name: Optional[str] = None
+    organizer_email: Optional[EmailStr] = None
+    organizer_phone: Optional[str] = None
+    rules: Optional[str] = None
+    notes: Optional[str] = None
+
+
 class Tournament(TournamentBase):
+    """Schema for reading a tournament"""
     id: int
     owner_id: int
-    owner: User # Nest the full User object
+    status: str
+    is_published: bool
+    logo_url: Optional[str] = None
+    banner_url: Optional[str] = None
 
     class Config:
         from_attributes = True
+
+
+class TournamentWithStats(Tournament):
+    """Tournament with statistics"""
+    total_teams: int = 0
+    total_matches: int = 0
+    completed_matches: int = 0
+    total_registrations: int = 0
+    approved_registrations: int = 0

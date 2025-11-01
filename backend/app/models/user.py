@@ -1,5 +1,17 @@
-from sqlalchemy import Column, Integer, String, Boolean
-from ..db.base import Base # Import the Base we just made
+from sqlalchemy import Column, Integer, String, Boolean, Enum
+from sqlalchemy.orm import relationship
+from ..db.base import Base
+import enum
+
+
+class UserRole(str, enum.Enum):
+    """User roles for role-based access control"""
+    ADMIN = "admin"  # Programme Director / Admin
+    MANAGER = "manager"  # Programme Manager
+    COACH = "coach"  # Coach / Facilitator
+    REPORTING = "reporting"  # Reporting / Data Team
+    COORDINATOR = "coordinator"  # Community / School Coordinator
+
 
 class User(Base):
     """
@@ -11,7 +23,14 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    full_name = Column(String)
+    
+    # Role-based access control
+    role = Column(Enum(UserRole), default=UserRole.COACH, nullable=False)
+    is_active = Column(Boolean, default=True)
+    
+    # Legacy field for backward compatibility
     is_admin = Column(Boolean, default=False)
     
-    # We can add relationships later, e.g.:
-    # tournaments = relationship("Tournament", back_populates="owner")
+    # Relationships
+    tournaments = relationship("Tournament", back_populates="owner")
