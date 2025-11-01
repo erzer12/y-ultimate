@@ -24,10 +24,18 @@ function App() {
         <div className="min-h-screen bg-gray-50">
           <Navbar />
           <Routes>
+            {/* Public Routes - No authentication required */}
             <Route path="/" element={<Dashboard />} />
             <Route path="/tournaments" element={<Tournament />} />
-            <Route path="/children/:profileId" element={<ChildProfile />} />
+            <Route path="/about" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
+            
+            {/* Protected Routes - Authentication required (can be wrapped with ProtectedRoute later) */}
+            <Route path="/children" element={<ChildProfile />} />
+            <Route path="/children/:profileId" element={<ChildProfile />} />
+            <Route path="/sessions" element={<Dashboard />} />
+            <Route path="/analytics" element={<Dashboard />} />
+            <Route path="/profile" element={<Dashboard />} />
           </Routes>
         </div>
       </Router>

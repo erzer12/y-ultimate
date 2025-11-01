@@ -1,18 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Users, Trophy, Calendar, BarChart3, User, Menu, X } from 'lucide-react';
+import { Home, Users, Trophy, Calendar, BarChart3, User, Menu, X, LogIn } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Check if user is logged in (in real app, check auth context/state)
+  const isAuthenticated = false; // TODO: Replace with actual auth state
 
-  const navItems = [
-    { path: '/', label: 'Dashboard', icon: Home },
+  // Public navigation items (available to all)
+  const publicNavItems = [
+    { path: '/', label: 'Home', icon: Home },
+    { path: '/tournaments', label: 'Tournaments', icon: Trophy },
+    { path: '/about', label: 'About', icon: Users },
+  ];
+
+  // Authenticated navigation items (only for logged-in users)
+  const authNavItems = [
     { path: '/children', label: 'Children', icon: Users },
     { path: '/sessions', label: 'Sessions', icon: Calendar },
-    { path: '/tournaments', label: 'Tournaments', icon: Trophy },
     { path: '/analytics', label: 'Analytics', icon: BarChart3 },
   ];
+
+  const navItems = isAuthenticated 
+    ? [...publicNavItems, ...authNavItems]
+    : publicNavItems;
 
   const isActive = (path) => location.pathname === path;
 
@@ -53,15 +66,25 @@ const Navbar = () => {
             })}
           </div>
 
-          {/* User Menu */}
+          {/* User Menu / Login */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link
-              to="/profile"
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all duration-200"
-            >
-              <User className="w-5 h-5" />
-              <span className="font-medium">Profile</span>
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                to="/profile"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all duration-200"
+              >
+                <User className="w-5 h-5" />
+                <span className="font-medium">Profile</span>
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center space-x-2 px-6 py-2 rounded-lg bg-primary-500 text-white hover:bg-primary-600 transition-all duration-200 font-medium shadow-md"
+              >
+                <LogIn className="w-5 h-5" />
+                <span>Login</span>
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -102,14 +125,29 @@ const Navbar = () => {
                 </Link>
               );
             })}
-            <Link
-              to="/profile"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 font-medium"
-            >
-              <User className="w-5 h-5" />
-              <span>Profile</span>
-            </Link>
+            
+            {/* Mobile Login/Profile */}
+            <div className="pt-4 border-t border-gray-200 mt-4">
+              {isAuthenticated ? (
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 font-medium"
+                >
+                  <User className="w-5 h-5" />
+                  <span>Profile</span>
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary-500 text-white font-medium"
+                >
+                  <LogIn className="w-5 h-5" />
+                  <span>Login</span>
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       )}
