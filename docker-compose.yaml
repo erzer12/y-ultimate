@@ -30,6 +30,10 @@ services:
     # Python backend service
     build: ./backend
     container_name: y-ultimate-backend
+    environment:
+      DATABASE_URL: "postgresql://user:password@db/yultimate_db"
+      JWT_SECRET_KEY: "your-secret-key"
+      JWT_ALGORITHM: "HS256"
     ports:
       - "8000:8000"
     depends_on:

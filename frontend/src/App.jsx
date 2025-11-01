@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/tournament" element={<Tournament />} />
-        <Route path="/child-profile" element={<ChildProfile />} />
+        <Route path="/child-profile/:profileId" element={<ChildProfile />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
